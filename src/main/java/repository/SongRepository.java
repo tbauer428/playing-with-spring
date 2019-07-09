@@ -11,14 +11,26 @@ public class SongRepository {
     private Map<String, Song> songMap = new HashMap<>();
 
     public Song save(Song newSong) {
+        validate(newSong);
         var id = UUID.randomUUID().toString();
         newSong.setId(id);
         songMap.put(id, newSong);
         return newSong;
     }
 
+    private void validate(Song newSong) {
+        if(newSong.getArtist() == null || newSong.getName()==null){
+            throw new IllegalArgumentException();
+        }
+    }
+
     public Song findById(String id){
-        return songMap.get(id);
+        var song = songMap.get(id);
+        if(song == null){
+            throw new SongNotFoundException();
+        }else {
+            return songMap.get(id);
+        }
     }
 
     public Map<String, Song> findAll(){

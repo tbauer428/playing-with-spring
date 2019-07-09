@@ -1,5 +1,6 @@
 hello/Greeting.class
+repository/SongNotFoundException.class
+repository/SongRepository.class
 hello/Application.class
 hello/Song.class
 hello/GreetingController.class
-repository/SongRepository.class
