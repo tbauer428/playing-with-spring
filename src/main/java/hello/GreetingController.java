@@ -1,9 +1,18 @@
 package hello;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
+
+import lombok.var;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+
+
 
 @RestController
 public class GreetingController {
@@ -19,8 +28,17 @@ public class GreetingController {
     }
 
     @RequestMapping("/songs")
-    public Songs song(@RequestParam(value="name", defaultValue = "The Beejees") String name){
-        return new Songs(counter.incrementAndGet(),
-                String.format(songtemplate, name));
+    public List<Song> getSongs(@RequestParam(value="artist", defaultValue = "") String artist) {
+        List<Song> songs = Arrays.asList(
+                new Song("Spirit of Radio", "Rush"),
+                new Song("The Twilight Zone", "Rush"),
+                new Song("Heads Will Rolls", "Yeah Yeah Yeahs")
+        );
+        if(artist.equals("")){
+            return songs;
+        }else{
+            return songs.stream().filter(song -> song.getArtist().equals(artist)).collect(Collectors.toList());
+
+        }
     }
 }
