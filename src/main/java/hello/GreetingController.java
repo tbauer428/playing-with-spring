@@ -1,25 +1,19 @@
 package hello;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
-
-import lombok.var;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-
+import java.util.Map;
+import org.springframework.web.bind.annotation.*;
+import repository.SongRepository;
 
 
 @RestController
 public class GreetingController {
 
     private static final String template = "Hello, %s!";
-    private static final String songtemplate = "Artist: %s";
     private final AtomicLong counter = new AtomicLong();
+
+    private SongRepository repository = new SongRepository();
 
     @RequestMapping("/greeting")
     public Greeting greeting(@RequestParam(value="name", defaultValue="World") String name) {
@@ -27,18 +21,25 @@ public class GreetingController {
                 String.format(template, name));
     }
 
-    @RequestMapping("/songs")
-    public List<Song> getSongs(@RequestParam(value="artist", defaultValue = "") String artist) {
-        List<Song> songs = Arrays.asList(
-                new Song("Spirit of Radio", "Rush"),
-                new Song("The Twilight Zone", "Rush"),
-                new Song("Heads Will Rolls", "Yeah Yeah Yeahs")
-        );
-        if(artist.equals("")){
-            return songs;
-        }else{
-            return songs.stream().filter(song -> song.getArtist().equals(artist)).collect(Collectors.toList());
-
-        }
+    @GetMapping("/songs")
+    public Map<String, Song> getAll(){
+        return repository.findAll();
     }
+
+    @PostMapping("/songs")
+    public Song newSong(@RequestBody Song newSong) {
+        return repository.save(newSong);
+    }
+
+    @RequestMapping("/songs/{id}")
+    public Song foundSong(@PathVariable String id){
+        return repository.findById(id);
+    }
+
+    @DeleteMapping("/songs/delete/{id}")
+    public Song deleteById(@PathVariable String id){
+        return repository.deleteById(id);
+    }
+
+
 }
