@@ -2,6 +2,8 @@ package hello;
 
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.Map;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import repository.SongNotFoundException;
@@ -9,6 +11,7 @@ import repository.SongRepository;
 
 
 @RestController
+@Slf4j
 public class GreetingController {
 
     private static final String template = "Hello, %s!";
@@ -31,6 +34,7 @@ public class GreetingController {
     @PostMapping("/songs")
     @ResponseStatus(HttpStatus.CREATED)
     public Song newSong(@RequestBody Song newSong) {
+        log.info("New Song Created: {}", newSong);
         return repository.save(newSong);
     }
 
@@ -54,13 +58,16 @@ public class GreetingController {
     @ExceptionHandler(SongNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     String songNotFoundHandler(SongNotFoundException ex) {
+        log.error("Song was not found", ex);
         return "Song Not Found";
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     String illegalArgumentException(IllegalArgumentException ex) {
+        log.error("artist or name was passed a null", ex);
         return "Artist and Name cannot be null";
     }
 
 }
+
