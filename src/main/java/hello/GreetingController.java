@@ -29,11 +29,13 @@ public class GreetingController {
     }
 
     @PostMapping("/songs")
+    @ResponseStatus(HttpStatus.CREATED)
     public Song newSong(@RequestBody Song newSong) {
         return repository.save(newSong);
     }
 
     @RequestMapping("/songs/{id}")
+    @ResponseStatus(HttpStatus.FOUND)
     public Song foundSong(@PathVariable String id){
         return repository.findById(id);
     }
@@ -49,10 +51,9 @@ public class GreetingController {
         return "Song Not Found";
     }
 
-
     @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.PARTIAL_CONTENT)
-   String illegalArgumentException(IllegalArgumentException ex) {
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String illegalArgumentException(IllegalArgumentException ex) {
         return "Artist and Name cannot be null";
     }
 
