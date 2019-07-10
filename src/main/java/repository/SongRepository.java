@@ -19,9 +19,16 @@ public class SongRepository {
     }
 
     private void validate(Song newSong) {
-        if(newSong.getArtist() == null || newSong.getName()==null){
+        if(newSong.getArtist() == null || newSong.getName() == null){
             throw new IllegalArgumentException();
         }
+    }
+
+    public Song findAndUpdate(String id, Song updatedSong) {
+        validate(updatedSong);
+        updatedSong.setId(id);
+        songMap.put(id, updatedSong);
+        return updatedSong;
     }
 
     public Song findById(String id){

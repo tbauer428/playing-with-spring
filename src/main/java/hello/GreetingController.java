@@ -34,6 +34,12 @@ public class GreetingController {
         return repository.save(newSong);
     }
 
+    @PutMapping("/songs/{id}")
+    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+    public Song updateSong(@PathVariable String id, @RequestBody Song updatedSong) {
+        return repository.findAndUpdate(id, updatedSong);
+    }
+
     @RequestMapping("/songs/{id}")
     @ResponseStatus(HttpStatus.FOUND)
     public Song foundSong(@PathVariable String id){
